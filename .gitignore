@@ -1,0 +1,12 @@
+__pycache__/
+analysis_results/
+*.npy
+temp/
+images/
+measurements/
+*.swp
+*.txt
+
+src/*.npy
+src/__pycache__/
+src*.swp
