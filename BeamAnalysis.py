@@ -11,7 +11,6 @@ import matplotlib.pyplot as pt
 import pickle
 from multiprocessing import cpu_count
 import warnings
-import csv
 pt.rcParams['xtick.top'] = True
 pt.rcParams['ytick.right'] = True                                                                                                                                               
 
@@ -61,22 +60,17 @@ sep                     = os.sep
 ###########################################################################
 #                            CONTROL PARAMS                               #
 ###########################################################################
-chopFlag                = 0#1
-readData                = 0#1
+chopFlag                = 0
+readData                = 0
 XYscanFlag              = chopFlag or readData
-Grid_data               = 0#1
+Grid_data               = 1
 find_center             = 1
 fit_gauss               = 1
 
-plot_circlefit          = 0
-plot_blindcor_drift     = 0
-plot_harmonic_KID       = 1
 plot_beams              = 0
 plot_beams_max          = 1
 plot_fit_flag           = 1
 plot_gauss_param        = 1
-
-make_movie              = 0
 
 ###########################################################################
 #                             FILEPATHS                                   #
@@ -86,7 +80,6 @@ dirmeas = "/XYZScan_20230111_194931" # in front of cryo/
 path = "/home/arend/Projects/Software/HPAnalysis/measurements"
 
 dirdat = path + dirmeas
-
 for file in os.listdir(dirdat):
     if file.endswith(".fits"):
         fitsname = file
@@ -245,7 +238,7 @@ def Main():
                   "points",
                   "Lorentz",
                   1e6,
-                  plot_circlefit)
+                  )
         ###########################################################################
 
         CDP["scanwidth"] = CARD_sweep["scanwidth"]
@@ -496,44 +489,6 @@ def Main():
     chunk = np.load("temp/xy/xy_5.npy")
 
     # Visual KID vs harmonic number
-    if plot_harmonic_KID:
-        KID_id = []
-        filt_freq = []
-        with open('KIDID_FilterF0_Q.run991.csv', newline='') as csvfile:
-            reader = csv.reader(csvfile, delimiter=',', quotechar='|')
-            for row in reader:
-                if row[0][0] == "#":
-                    continue
-                
-                x = float(row[-2])
-                #if math.isnan(x):
-                #    continue
-
-                kid = int(float(row[0]))
-
-                KID_id.append(kid)
-                filt_freq.append(x)
-
-        filt_freq = np.array(filt_freq)
-        badlist_plot = np.array([0, 1, 23, 65, 240, 208, 170, 122, 98, 74])
-        #sum_beam_l[badlist,:] *= 1e-16
-
-        #badlist_plot = np.array([0, 1, 23, 65, 240, 208, 170, 122, 98, 74])
-        betterlist_p_nowb = np.delete(CDP["goodlist"], wideband)
-        betterlist_p_nowb = np.delete(betterlist_p_nowb, badlist)#_plot)
-       
-        select_KID = betterlist_p_nowb#[:-30] + 25
-
-        id_sorted = np.argsort(np.array(filt_freq)[select_KID])
-
-        filt_freq_good = np.array(filt_freq)[select_KID][id_sorted]
-        KID_id_good = np.array(KID_id)[select_KID][id_sorted]
-        to_plot = sum_beam_l[KID_id_good, :]# / np.sum(sum_beam_l[wideband,:])
-        fTHz = np.array(f_RF) / 1e9
-
-        #np.save("filter_freqs", filt_freq_good)
-        #np.save("beams_filt_signal", sum_beam_l[KID_id_good,:])
-
     if plot_beams_max:
         # Plot amp and phase beam for loudest KIDs
         if not os.path.isdir('images{}/beams/maxbeams/'.format(dirmeas)):
@@ -550,12 +505,10 @@ def Main():
             max_max = np.max(np.absolute((beam_corrected_l[j])[Id,:,:]))
             maxplot = np.max(20*np.log10(np.absolute((beam_corrected_l[j])[Id,:,:])/wideband_norm[Id]))
             to_save = np.flip((beam_corrected_l[j])[Id,:,:], axis=-1)
-            off_y = -47.81 - grid_y[0, round(y_uniq.shape[0]/2)] 
-            off_x = -22.537 - grid_x[round(x_uniq.shape[0]/2), 0]
             
-            ampfig = ax[0].pcolormesh(grid_x + off_x, grid_y + off_y, 20*np.log10(np.absolute((beam_corrected_l[j])[Id,:,:].T)/max_max), 
+            ampfig = ax[0].pcolormesh(grid_x, grid_y, 20*np.log10(np.absolute((beam_corrected_l[j])[Id,:,:].T)/max_max), 
                                     cmap=cmocean.cm.thermal, vmin=-30, vmax=0, linewidth=0, rasterized=True)
-            phasefig = ax[1].pcolormesh(grid_x + off_x, grid_y + off_y, np.angle((beam_corrected_l[j])[Id,:,:].T), cmap=cmocean.cm.phase, linewidth=0, rasterized=True)
+            phasefig = ax[1].pcolormesh(grid_x, grid_y, np.angle((beam_corrected_l[j])[Id,:,:].T), cmap=cmocean.cm.phase, linewidth=0, rasterized=True)
             ax[0].set_title("Power / dB")#, y=1.08)
             ax[0].set_xlabel(r"($x-x_\mathrm{WF}$) / mm")
             ax[0].set_ylabel(r"($z-z_\mathrm{WF}$) / mm")
@@ -564,9 +517,6 @@ def Main():
             ax[1].set_ylabel(r"($z-z_\mathrm{WF}$) / mm")
 
             # Plot a cross through center
-            ax[0].scatter(104 + off_x, 54 + off_y, marker="x", color="black", zorder=100)
-            ax[1].scatter(98 + off_x, 67 + off_y, marker="x", color="black", zorder=100)
-
             divider1 = make_axes_locatable(ax[0])
             divider2 = make_axes_locatable(ax[1])
 

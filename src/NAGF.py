@@ -103,29 +103,6 @@ def nested_astiggausian_fit(fit_param, beam, dirmeas, harmIdx, KIDIdx, plot_fit_
         pt.suptitle(r"KID {} Gaussian fit, $f$ = {:.2f} GHz".format(KIDIdx, 2.998e11 / beam["lambda"] / 1e9))
         pt.savefig(fname="images" + dirmeas + "/beams/gauss/lambda_{}".format(harmIdx),bbox_inches='tight', dpi=300)
         pt.close()
-        
-        fig1, ax1 = pt.subplots(2,1, figsize=(7,5), sharex=True, gridspec_kw={'hspace':0})
-        ax1[0].plot(beam["x"][0,:], 20*np.log10(np.absolute(beam["cdata"][int(len(beam["x"][0,:])/2),:]) / np.max(np.absolute(beam["cdata"]))),color='blue',label='data')
-        ax1[0].plot(beam["x"][0,:], 20*np.log10(np.absolute(GBA_dat["psi"][int(len(beam["x"][0,:])/2),:]) / np.max(np.absolute(beam["cdata"]))),color='red',label='fit')
-        
-        ax1[1].plot(beam["x"][0,:], np.angle(beam["cdata"][int(len(beam["x"][0,:])/2),:]),color='blue')
-        ax1[1].plot(beam["x"][0,:], np.angle(GBA_dat["psi"][int(len(beam["x"][0,:])/2),:]),color='red')
-        
-        ax1[0].set_ylabel(r"PNA / [dB]")
-        ax1[0].margins(x=0.01)
-        ax1[0].xaxis.set_minor_locator(ticker.AutoMinorLocator())
-        ax1[0].yaxis.set_minor_locator(ticker.AutoMinorLocator())
-        ax1[0].legend(frameon=False, prop={'size': 20}, loc='lower center', handlelength=1)
-        
-        ax1[1].set_xlabel(r"$x$ / [mm]")
-        ax1[1].set_ylabel(r"Phase / [rad]")
-        ax1[1].margins(x=0.01)
-        ax1[1].xaxis.set_minor_locator(ticker.AutoMinorLocator())
-        ax1[1].yaxis.set_minor_locator(ticker.AutoMinorLocator())
-        
-        ax1[0].set_title(r"KID {} Gaussian fit x-slice, $f$ = {:.2f} GHz".format(KIDIdx, 2.998e11 / beam["lambda"] / 1e9))
-        pt.savefig(fname="images" + dirmeas + "/beams/gauss/slices/lambda_{}".format(harmIdx),bbox_inches='tight', dpi=300)
-        pt.close()
     
     eff["w0x"]      = optargs[2]
     eff["w0y"]      = optargs[3]

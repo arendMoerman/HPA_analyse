@@ -5,8 +5,10 @@ temp/
 images/
 measurements/
 *.swp
+*.swo
 *.txt
 
 src/*.npy
 src/__pycache__/
-src*.swp
+src/*.swp
+src/*.swo

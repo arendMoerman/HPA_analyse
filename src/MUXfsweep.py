@@ -54,7 +54,6 @@ def MUXfsweep(CARDparam,
               moderange,
               modesweep,
               GG,
-              plot_circlefit,
               takephaseref = 1,
               limitrange = 0,
               colspace = 1):
@@ -321,36 +320,5 @@ def MUXfsweep(CARDparam,
         total_kids_uncal = np.append(total_kids_uncal, datsweep[:,goodlist[i]] / np.max(np.absolute(datsweep[:,goodlist[i]])))
         total_kids_cal = np.append(total_kids_cal, normsweep[:,goodlist[i]])
         total_freq = np.append(total_freq, f[:,goodlist[i]])
-
-        if plot_circlefit:
-            fig, ax = pt.subplots(1,1, figsize=(5,5))
-            ax.plot(np.real(uncal), np.imag(uncal), color='black', label='uncalibrated')
-            ax.scatter(np.real(uncal_min), np.imag(uncal_min), color='black', zorder=100)
-            
-            ax.plot(x, y, 'r', label='calibrated')
-            
-            ax.plot(x1, y1, 'b', label='rotate + shift')
-
-            ax.scatter(np.real(S21res), np.imag(S21res), color='black', zorder=100)
-            ax.scatter(np.real(S21res_cal), np.imag(S21res_cal), color='black', zorder=100)
-            
-            ax.scatter(0, 0, color='black', marker='X', zorder=100)
-            ax.scatter(xfit, yfit, color='black', marker='X', zorder=100)
-            
-            ax.plot([0,np.real(S21res_cal)], [0,np.imag(S21res_cal)], ls='--', c='k', lw=0.7, zorder=0)
-            
-            ax.tick_params(which="both", direction="in")
-            ax.set_box_aspect(1)
-            ax.xaxis.set_minor_locator(ticker.AutoMinorLocator())
-            ax.yaxis.set_minor_locator(ticker.AutoMinorLocator())
-            ax.set_ylabel(r"$\Im{(\:S_{21}\:)}$")
-            ax.set_xlabel(r"$\Re{(\:S_{21}\:)}$")
-            ax.set_aspect(1)
-                        
-            ax.legend(frameon=False, prop={'size': 12},handlelength=1)
-            
-            #pt.savefig(fname="images" + dirmeas + "/circle_fits/KID_{}_circle.png".format(i),bbox_inches='tight', dpi=300)
-            pt.show()
-            pt.close()
     
     return KDP, CALparam, CARDparam, data
