@@ -23,9 +23,6 @@ Example: I want to analyse XYZScan\_20230111\_194931, located in /home/arend/Pro
 `dirmeas = "/XYZScan_20230111_194931"`
 `path = "/home/arend/Projects/HPA/measurements"`
 
-## Step three
-Make sure that you use an appropriate KIDid to filter frequency conversion file. I added KIDID\_FilterF0\_Q.run991.csv file.
-
 ## Running the script
 ```
 python BeamAnalysis.py 
