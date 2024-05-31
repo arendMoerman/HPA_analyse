@@ -51,3 +51,8 @@ All these parameters are in millimeters.
 `gaussicity.npy` contains the Gaussicity of each fit to each HPA frequency.
 
 The beam patterns are saved in a text file format with the name being the HPA frequency in GHz, with the complex (prefix 'i') and real parts (prefix 'r') in separate files. Also, the `used_KIDs.npy` file contains the same as the {name\_of\_measurment}\_KID\_lists.txt (will probably remove in the future). The `tilt_params.npy` file contains the fitted tilt of the beam, for each HPA frequency, in degrees around the lateral axes in the measurement plane.
+
+## Plotting beam pattern from analysis_result
+To plot a beam pattern from the `analysis results` folder, adjust the path and name at the bottom of the `read_beam.py` script to match the measurement and name of beam you want to plot.
+Example: I have analysed a measurement, {name\_of\_measurement}, and I want to plot HPA frequency 205, set `path="./analysis_results/{name\_of\_measurement}"` and `name="205"`.
+Then, run `read_beam.py` and the plot should appear.
